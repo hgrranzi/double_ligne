@@ -37,12 +37,12 @@ def get_minimum_interest_combination(total_duration, rate_grid)
 end
 
 begin
-  rate_grid = { 10 => 2.9,
-                12 => 3.2,
-                15 => 3.5,
-                20 => 3.8,
-                22 => 3.8,
-                25 => 4.4 }.sort.to_h
+  rate_grid = { 10 => 0.029,
+                12 => 0.032,
+                15 => 0.035,
+                20 => 0.038,
+                22 => 0.038,
+                25 => 0.044 }.sort.to_h
 
   puts get_minimum_interest_combination 25, rate_grid
   puts rate_grid
