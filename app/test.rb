@@ -22,10 +22,14 @@ def get_minimum_interest_combination(total_duration, rate_grid)
     break if duration >= total_duration
 
     ratio = calculate_optimal_ratio(duration, rate, total_duration, rate_grid[total_duration])
-    interest = calculate_interest(rate, duration, ratio) +
-      calculate_interest(rate_grid[total_duration], total_duration - duration, 100 - ratio)
 
-    if interest < combination[:interest]
+    interest_first = calculate_interest(rate, duration, ratio)
+    interest_second_during_first = rate_grid[total_duration] * duration * (100.0 - ratio)
+    interest_second_after_first = calculate_interest(rate_grid[total_duration], total_duration - duration, 100.0 - ratio)
+
+    interest = interest_first + interest_second_during_first + interest_second_after_first
+
+    if interest <= combination[:interest]
       combination[:duration] = duration
       combination[:rate] = rate
       combination[:ratio] = ratio
@@ -44,6 +48,5 @@ begin
                 22 => 0.038,
                 25 => 0.044 }.sort.to_h
 
-  puts get_minimum_interest_combination 25, rate_grid
-  puts rate_grid
+  puts get_minimum_interest_combination(25, rate_grid)
 end
