@@ -3,14 +3,14 @@ def calculate_monthly_payment(amount, rate, total_months)
   amount * (monthly_rate / (1 - (1 + monthly_rate) ** -total_months))
 end
 
-def calculate_interest(rate, duration, amount)
+def calculate_interest(rate, duration, amount) # ex 1
   total_months = duration * 12
 
   p = calculate_monthly_payment(amount, rate, total_months)
   p * total_months - amount
 end
 
-def calculate_optimal_ratio(rate1, duration1, rate2, duration2)
+def calculate_optimal_ratio(rate1, duration1, rate2, duration2) # ex 2
   ratio = 0
 
   (0.01..99).step(0.01).each do |amount1|
@@ -26,7 +26,7 @@ def calculate_optimal_ratio(rate1, duration1, rate2, duration2)
   ratio
 end
 
-def get_minimum_interest_combination(total_duration, rate_grid)
+def get_minimum_interest_combination(total_duration, rate_grid) # ex 3
   grid = rate_grid.sort.to_h
   combination = {
     duration: 0,
