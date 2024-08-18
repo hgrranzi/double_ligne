@@ -16,7 +16,8 @@ grid = grid1
 
 puts "Ex #1:"
 res_1 = calculate_interest(grid[years], years, loan).round
-puts "years: #{years} | " \
+puts "loan amount: #{loan} | " \
+       "years: #{years} | " \
        "rate: #{grid[years]} | " \
        "interest: #{res_1}"
 
