@@ -13,7 +13,7 @@ end
 def calculate_optimal_ratio(rate1, duration1, rate2, duration2) # ex 2
   ratio = 0
 
-  (0.01..99).step(0.01).each do |amount1|
+  (0.01...100).step(0.01).each do |amount1|
     amount1 = amount1.round(2)
     amount2 = (100 - amount1).round(2)
     m1 = calculate_monthly_payment(amount1, rate1, duration1 * 12)
