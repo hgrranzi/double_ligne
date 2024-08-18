@@ -27,23 +27,24 @@ def calculate_optimal_ratio(rate1, duration1, rate2, duration2)
 end
 
 def get_minimum_interest_combination(total_duration, rate_grid)
+  grid = rate_grid.sort.to_h
   combination = {
     duration: 0,
     rate: 0,
     ratio: 0,
-    interest: calculate_interest(rate_grid[total_duration], total_duration, 100)
+    interest: calculate_interest(grid[total_duration], total_duration, 100)
   }
 
-  rate_grid.each do |duration, rate|
+  grid.each do |duration, rate|
     break if duration >= total_duration
 
-    ratio = calculate_optimal_ratio(rate, duration, rate_grid[total_duration], total_duration)
+    ratio = calculate_optimal_ratio(rate, duration, grid[total_duration], total_duration)
     next if ratio == 0
     amount2 = (100 - ratio).round(2)
 
     interest_first = calculate_interest(rate, duration, ratio)
-    interest_second_during_first = rate_grid[total_duration] * duration * (amount2)
-    interest_second_after_first = calculate_interest(rate_grid[total_duration], total_duration - duration, amount2)
+    interest_second_during_first = grid[total_duration] * duration * (amount2)
+    interest_second_after_first = calculate_interest(grid[total_duration], total_duration - duration, amount2)
 
     interest = (interest_first + interest_second_during_first + interest_second_after_first).round(2)
 
