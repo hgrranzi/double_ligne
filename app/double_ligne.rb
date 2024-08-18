@@ -1,5 +1,5 @@
 def calculate_monthly_payment(amount, rate, total_months)
-  monthly_rate = rate / 12.0
+  monthly_rate = rate / 12
   amount * (monthly_rate / (1 - (1 + monthly_rate) ** -total_months))
 end
 
@@ -14,7 +14,8 @@ def calculate_optimal_ratio(rate1, duration1, rate2, duration2)
   ratio = 0
 
   (0.01..99).step(0.01).each do |amount1|
-    amount2 = 100 - amount1
+    amount1 = amount1.round(2)
+    amount2 = (100 - amount1).round(2)
     m1 = calculate_monthly_payment(amount1, rate1, duration1 * 12)
     monthly_interest2 = amount2 * rate2 / 12
     m2 = calculate_monthly_payment(amount2, rate2, (duration2 - duration1) * 12)
@@ -30,19 +31,21 @@ def get_minimum_interest_combination(total_duration, rate_grid)
     duration: 0,
     rate: 0,
     ratio: 0,
-    interest: calculate_interest(rate_grid[total_duration], total_duration, 100.0)
+    interest: calculate_interest(rate_grid[total_duration], total_duration, 100)
   }
 
   rate_grid.each do |duration, rate|
     break if duration >= total_duration
 
     ratio = calculate_optimal_ratio(rate, duration, rate_grid[total_duration], total_duration)
+    next if ratio == 0
+    amount2 = (100 - ratio).round(2)
 
     interest_first = calculate_interest(rate, duration, ratio)
-    interest_second_during_first = rate_grid[total_duration] * duration * (100.0 - ratio)
-    interest_second_after_first = calculate_interest(rate_grid[total_duration], total_duration - duration, 100.0 - ratio)
+    interest_second_during_first = rate_grid[total_duration] * duration * (amount2)
+    interest_second_after_first = calculate_interest(rate_grid[total_duration], total_duration - duration, amount2)
 
-    interest = interest_first + interest_second_during_first + interest_second_after_first
+    interest = (interest_first + interest_second_during_first + interest_second_after_first).round(2)
 
     if interest <= combination[:interest]
       combination[:duration] = duration
@@ -53,15 +56,4 @@ def get_minimum_interest_combination(total_duration, rate_grid)
   end
 
   combination
-end
-
-begin
-  rate_grid = { 10 => 0.029,
-                12 => 0.032,
-                15 => 0.035,
-                20 => 0.038,
-                22 => 0.038,
-                25 => 0.044 }.sort.to_h
-
-  puts get_minimum_interest_combination(25, rate_grid)
 end
