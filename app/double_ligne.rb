@@ -19,7 +19,7 @@ def calculate_optimal_ratio(rate1, duration1, rate2, duration2) # ex 2
     m1 = calculate_monthly_payment(amount1, rate1, duration1 * 12)
     monthly_interest2 = amount2 * rate2 / 12
     m2 = calculate_monthly_payment(amount2, rate2, (duration2 - duration1) * 12)
-    if (m1 + monthly_interest2) <= m2
+    if (m1 + monthly_interest2).round(2) == m2.round(2)
       ratio = amount1
     end
   end
