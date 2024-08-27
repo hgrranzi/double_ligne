@@ -11,19 +11,19 @@ def calculate_interest(rate, duration, amount) # ex 1
 end
 
 def calculate_optimal_ratio(rate1, duration1, rate2, duration2) # ex 2
-  ratio = 0
+  optimal_ratio = 0
 
-  (0.01...100).step(0.01).each do |amount1|
-    amount1 = amount1.round(2)
-    amount2 = (100 - amount1).round(2)
-    m1 = calculate_monthly_payment(amount1, rate1, duration1 * 12)
-    monthly_interest2 = amount2 * rate2 / 12
-    m2 = calculate_monthly_payment(amount2, rate2, (duration2 - duration1) * 12)
+  (0.01...100).step(0.01).each do |portion1|
+    portion1 = portion1.round(2)
+    portion2 = (100 - portion1).round(2)
+    m1 = calculate_monthly_payment(portion1, rate1, duration1 * 12)
+    monthly_interest2 = portion2 * rate2 / 12
+    m2 = calculate_monthly_payment(portion2, rate2, (duration2 - duration1) * 12)
     if (m1 + monthly_interest2).round(2) == m2.round(2)
-      ratio = amount1
+      optimal_ratio = portion1
     end
   end
-  ratio
+  optimal_ratio
 end
 
 def get_minimum_interest_combination(total_duration, rate_grid) # ex 3
@@ -38,20 +38,20 @@ def get_minimum_interest_combination(total_duration, rate_grid) # ex 3
   grid.each do |duration, rate|
     break if duration >= total_duration
 
-    ratio = calculate_optimal_ratio(rate, duration, grid[total_duration], total_duration)
-    next if ratio == 0
-    amount2 = (100 - ratio).round(2)
+    portion1 = calculate_optimal_ratio(rate, duration, grid[total_duration], total_duration)
+    next if portion1 == 0
+    portion2 = (100 - portion1).round(2)
 
-    interest_first = calculate_interest(rate, duration, ratio)
-    interest_second_during_first = grid[total_duration] * duration * (amount2)
-    interest_second_after_first = calculate_interest(grid[total_duration], total_duration - duration, amount2)
+    interest_first = calculate_interest(rate, duration, portion1)
+    interest_second_during_first = grid[total_duration] * duration * (portion2)
+    interest_second_after_first = calculate_interest(grid[total_duration], total_duration - duration, portion2)
 
     interest = (interest_first + interest_second_during_first + interest_second_after_first).round(2)
 
     if interest <= combination[:interest]
       combination[:duration] = duration
       combination[:rate] = rate
-      combination[:ratio] = ratio
+      combination[:ratio] = portion1
       combination[:interest] = interest
     end
   end
